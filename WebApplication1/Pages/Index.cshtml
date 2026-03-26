@@ -1,0 +1,27 @@
+﻿@page
+@model WebApplication1.Pages.IndexModel
+
+<h2>Вход</h2>
+
+<form method="post" asp-page-handler="Login">
+    <div>
+        <label>Имя пользователя:</label>
+        <input type="text" asp-for="user.name" />
+    </div>
+    <div>
+        <label>Пароль:</label>
+        <input type="password" asp-for="user.password" />
+    </div>
+    <div>
+        <label>Роль:</label>
+        <select asp-for="role">
+            <option value="headpolicestation">Глава отдела</option>
+            <option value="headpolicedepartment">Глава департамента</option>
+            <option value="adminstation">Менеджер отдела</option>
+            <option value="headadministrator">Менеджер департамента</option>
+        </select>
+    </div>
+    <div>
+        <button type="submit">Войти</button>
+    </div>
+</form>

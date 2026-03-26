@@ -1,0 +1,38 @@
+﻿@page
+@model WebApplication1.Pages.AddIncidentModel
+
+<h2>Добавить инцидент</h2>
+
+<form method="post" asp-page-handler="AddIncident">
+    <div>
+        <label>Класс инцидента:</label>
+        <input type="number" asp-for="incident.IncidentClassId" />
+    </div>
+    <div>
+        <label>Дата:</label>
+        <input type="date" asp-for="incident.IncidentDate" />
+    </div>
+    <div>
+        <label>Описание:</label>
+        <input type="text" asp-for="incident.Description" />
+    </div>
+    <div>
+        <label>Стоимость ремонта:</label>
+        <input type="number" asp-for="incident.RepairCost" step="0.01" />
+    </div>
+    <div>
+        <label>Время:</label>
+        <input type="datetime-local" asp-for="incident.Timestamp" />
+    </div>
+    <div>
+        <label>Локация:</label>
+        <input type="text" asp-for="incident.Location" />
+    </div>
+    <div>
+        <label>ID полицейского участка:</label>
+        <input type="number" asp-for="incident.PoliceStationId" />
+    </div>
+    <div>
+        <button type="submit">Сохранить</button>
+    </div>
+</form>

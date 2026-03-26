@@ -1,0 +1,123 @@
+﻿@page
+@model WebApplication1.Pages.StatModel
+
+<h2>Статистика</h2>
+
+<div style="display:flex; gap:20px;">
+    <div>
+        <h3>Выберите запрос</h3>
+
+        <form method="post" asp-page-handler="GetAllDistrictCount">
+            <button type="submit">Все районы</button>
+        </form>
+
+        <form method="post" asp-page-handler="DistrictCount">
+            <label>С даты:</label>
+            <input type="date" name="dateFrom" />
+            <button type="submit">Инциденты по районам (с даты)</button>
+        </form>
+
+        <form method="post" asp-page-handler="DistrictMinGroup">
+            <label>Минимум инцидентов:</label>
+            <input type="number" name="min" />
+            <button type="submit">Инциденты по районам (с порогом)</button>
+        </form>
+
+        <form method="post" asp-page-handler="DistrictDateToMin">
+            <label>С даты:</label>
+            <input type="date" name="from" />
+            <label>По дату:</label>
+            <input type="date" name="to" />
+            <label>Мин. ущерб:</label>
+            <input type="number" step="0.01" name="minDamage" />
+            <button type="submit">Инциденты по районам (диапазон + порог)</button>
+        </form>
+
+        <form method="post" asp-page-handler="SubjectAgregate">
+            <button type="submit">Агрегат по районам (сортировка по ущербу)</button>
+        </form>
+
+        <form method="post" asp-page-handler="Agregate_with_subquery">
+            <button type="submit">Инциденты с ущербом выше среднего</button>
+        </form>
+    </div>
+
+    <div>
+        @if (Model.districtcountall != null)
+        {
+            <h3>Все районы</h3>
+            <table border="1">
+                <tr><th>Район</th><th>Количество</th><th>Сумма ущерба</th></tr>
+                @foreach (var d in Model.districtcountall)
+                {
+                    <tr><td>@d.DistrictId</td><td>@d.IncidentCount</td><td>@d.TotalDamage</td></tr>
+                }
+            </table>
+        }
+
+        @if (Model.districtCount != null)
+        {
+            <h3>Инциденты по районам (с даты)</h3>
+            <table border="1">
+                <tr><th>Район</th><th>Количество</th><th>Сумма ущерба</th></tr>
+                @foreach (var d in Model.districtCount)
+                {
+                    <tr><td>@d.DistrictId</td><td>@d.IncidentCount</td><td>@d.TotalDamage</td></tr>
+                }
+            </table>
+        }
+
+        @if (Model.districtCountsMin != null)
+        {
+            <h3>Инциденты по районам (с порогом)</h3>
+            <table border="1">
+                <tr><th>Район</th><th>Количество</th><th>Сумма ущерба</th></tr>
+                @foreach (var d in Model.districtCountsMin)
+                {
+                    <tr><td>@d.DistrictId</td><td>@d.IncidentCount</td><td>@d.TotalDamage</td></tr>
+                }
+            </table>
+        }
+
+        @if (Model.districtcount_date_and_min != null)
+        {
+            <h3>Инциденты по районам (диапазон + порог)</h3>
+            <table border="1">
+                <tr><th>Район</th><th>Количество</th><th>Сумма ущерба</th></tr>
+                @foreach (var d in Model.districtcount_date_and_min)
+                {
+                    <tr><td>@d.DistrictId</td><td>@d.IncidentCount</td><td>@d.TotalDamage</td></tr>
+                }
+            </table>
+        }
+
+        @if (Model.district_count_subject_agregate != null)
+        {
+            <h3>Агрегат по районам (сортировка по ущербу)</h3>
+            <table border="1">
+                <tr><th>Район</th><th>Количество</th><th>Сумма ущерба</th></tr>
+                @foreach (var d in Model.district_count_subject_agregate)
+                {
+                    <tr><td>@d.DistrictId</td><td>@d.IncidentCount</td><td>@d.TotalDamage</td></tr>
+                }
+            </table>
+        }
+
+        @if (Model.agregate_with_subquery != null)
+        {
+            <h3>Инциденты с ущербом выше среднего</h3>
+            <table border="1">
+                <tr><th>Класс</th><th>Дата</th><th>Описание</th><th>Стоимость ремонта</th></tr>
+                @foreach (var i in Model.agregate_with_subquery)
+                {
+                    <tr>
+                        <td>@i.IncidentClassId</td>
+                        <td>@i.IncidentDate</td>
+                        <td>@i.Description</td>
+                        <td>@i.RepairCost</td>
+                    </tr>
+                }
+            </table>
+        }
+    </div>
+</div>

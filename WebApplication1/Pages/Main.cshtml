@@ -1,0 +1,44 @@
+﻿@page
+@model WebApplication1.Pages.MainModel
+
+<h2>Список инцидентов</h2>
+
+<table border="1" cellpadding="5">
+    <thead>
+        <tr>
+            <th>Дата</th>
+            <th>Описание</th>
+            <th>Стоимость ремонта</th>
+            <th>Серийный номер</th>
+            <th>Цвет</th>
+            <th>Марка авто</th>
+            <th>Страховая компания</th>
+            <th>VIN</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.viewincidents)
+        {
+            <tr>
+                <td>@item.incident_date</td>
+                <td>@item.description</td>
+                <td>@item.repair_cost</td>
+                <td>@item.serial_number</td>
+                <td>@item.color</td>
+                <td>@item.car_brand</td>
+                <td>@item.insurance_company</td>
+                <td>@item.vin</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div style="margin-top:20px;">
+    <form method="post" asp-page-handler="AddIncident">
+        <button type="submit">Добавить инцидент</button>
+    </form>
+
+    <form method="post" asp-page-handler="DirectToStat">
+        <button type="submit">Перейти к статистике</button>
+    </form>
+</div>
