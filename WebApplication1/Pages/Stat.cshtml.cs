@@ -378,31 +378,6 @@ namespace WebApplication1.Pages
                 return Page();
         }
 
-       /* public IActionResult OnPostBrandCount()
-        {
-            var name = Request.Cookies["username"];
-            var password = Request.Cookies["password"];
-            var constring = $"Host=localhost;Database=postgres;Username={name};Password={password}";
-
-            using var conn = new Context(constring).GetConnection();
-            var sql = @"SELECT car_brand, COUNT(*) as count FROM gai.incidents GROUP BY car_brand";
-            brandCount = conn.Query<BrandCount>(sql).ToList();
-
-            return Page();
-        }*/
-
-       /* public IActionResult OnPostInsuranceStats()
-        {
-            var name = Request.Cookies["username"];
-            var password = Request.Cookies["password"];
-            var constring = $"Host=localhost;Database=postgres;Username={name};Password={password}";
-
-            using var conn = new Context(constring).GetConnection();
-            var sql = @"SELECT insurance_company, SUM(repair_cost) as total_cost 
-                        FROM gai.incidents GROUP BY insurance_company";
-            insuranceStats = conn.Query<InsuranceStats>(sql).ToList();
-
-            return Page();
-        } */
+       
     }
 }

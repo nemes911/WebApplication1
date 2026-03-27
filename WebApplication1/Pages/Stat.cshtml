@@ -3,51 +3,77 @@
 
 <h2>Статистика</h2>
 
-<div style="display:flex; gap:20px;">
-    <div>
+<div style="display:flex; gap:30px; flex-wrap:wrap;">
+
+    <!-- ==================== ЛЕВАЯ КОЛОНКА — ФОРМЫ ==================== -->
+    <div style="min-width:380px;">
         <h3>Выберите запрос</h3>
 
+        <!-- 1. Все районы -->
         <form method="post" asp-page-handler="GetAllDistrictCount">
-            <button type="submit">Все районы</button>
+            <button type="submit" class="btn btn-primary">Все районы</button>
         </form>
 
+        <!-- 2. Инциденты по районам с даты -->
         <form method="post" asp-page-handler="DistrictCount">
             <label>С даты:</label>
-            <input type="date" name="dateFrom" />
-            <button type="submit">Инциденты по районам (с даты)</button>
+            <input type="date" name="dateFrom" required />
+            <button type="submit" class="btn btn-primary">Инциденты по районам (с даты)</button>
         </form>
 
+        <!-- 3. С минимальным количеством инцидентов -->
         <form method="post" asp-page-handler="DistrictMinGroup">
             <label>Минимум инцидентов:</label>
-            <input type="number" name="min" />
-            <button type="submit">Инциденты по районам (с порогом)</button>
+            <input type="number" name="min" min="1" required />
+            <button type="submit" class="btn btn-primary">Инциденты по районам (с порогом)</button>
         </form>
 
+        <!-- 4. Диапазон дат + мин. ущерб -->
         <form method="post" asp-page-handler="DistrictDateToMin">
             <label>С даты:</label>
-            <input type="date" name="from" />
+            <input type="date" name="from" required />
             <label>По дату:</label>
-            <input type="date" name="to" />
+            <input type="date" name="to" required />
             <label>Мин. ущерб:</label>
-            <input type="number" step="0.01" name="minDamage" />
-            <button type="submit">Инциденты по районам (диапазон + порог)</button>
+            <input type="number" step="0.01" name="minDamage" required />
+            <button type="submit" class="btn btn-primary">Диапазон + порог ущерба</button>
         </form>
 
+        <!-- 5. Агрегат по районам (сортировка по ущербу) -->
         <form method="post" asp-page-handler="SubjectAgregate">
-            <button type="submit">Агрегат по районам (сортировка по ущербу)</button>
+            <button type="submit" class="btn btn-primary">Агрегат по районам (по ущербу ↓)</button>
         </form>
 
+        <!-- 6. Инциденты с ущербом выше среднего -->
         <form method="post" asp-page-handler="Agregate_with_subquery">
-            <button type="submit">Инциденты с ущербом выше среднего</button>
+            <button type="submit" class="btn btn-primary">Инциденты выше среднего ущерба</button>
+        </form>
+
+        <!-- 7. Поиск по транспортному средству (добавил) -->
+        <form method="post" asp-page-handler="GetIncidentByVehicle">
+            <label>ID транспортного средства:</label>
+            <input type="number" name="vehicle.Id" required />
+            <button type="submit" class="btn btn-success">Найти по ТС (права + владелец)</button>
+        </form>
+
+        <!-- 8. Инциденты за диапазон дат (View) -->
+        <form method="post" asp-page-handler="RangeView">
+            <label>С даты:</label>
+            <input type="date" name="dateFrom" required />
+            <label>По дату:</label>
+            <input type="date" name="dateTo" required />
+            <button type="submit" class="btn btn-primary">Инциденты за период (View)</button>
         </form>
     </div>
 
-    <div>
-        @if (Model.districtcountall != null)
+    <!-- ==================== ПРАВАЯ КОЛОНКА — РЕЗУЛЬТАТЫ ==================== -->
+    <div style="flex:1; min-width:700px;">
+
+        @if (Model.districtcountall?.Any() == true)
         {
             <h3>Все районы</h3>
-            <table border="1">
-                <tr><th>Район</th><th>Количество</th><th>Сумма ущерба</th></tr>
+            <table border="1" cellpadding="5" style="width:100%; border-collapse:collapse;">
+                <tr><th>Район ID</th><th>Кол-во инцидентов</th><th>Сумма ущерба</th></tr>
                 @foreach (var d in Model.districtcountall)
                 {
                     <tr><td>@d.DistrictId</td><td>@d.IncidentCount</td><td>@d.TotalDamage</td></tr>
@@ -55,11 +81,11 @@
             </table>
         }
 
-        @if (Model.districtCount != null)
+        @if (Model.districtCount?.Any() == true)
         {
             <h3>Инциденты по районам (с даты)</h3>
-            <table border="1">
-                <tr><th>Район</th><th>Количество</th><th>Сумма ущерба</th></tr>
+            <table border="1" cellpadding="5" style="width:100%; border-collapse:collapse;">
+                <tr><th>Район ID</th><th>Кол-во</th><th>Ущерб</th></tr>
                 @foreach (var d in Model.districtCount)
                 {
                     <tr><td>@d.DistrictId</td><td>@d.IncidentCount</td><td>@d.TotalDamage</td></tr>
@@ -67,11 +93,11 @@
             </table>
         }
 
-        @if (Model.districtCountsMin != null)
+        @if (Model.districtCountsMin?.Any() == true)
         {
-            <h3>Инциденты по районам (с порогом)</h3>
-            <table border="1">
-                <tr><th>Район</th><th>Количество</th><th>Сумма ущерба</th></tr>
+            <h3>Инциденты по районам (мин. количество)</h3>
+            <table border="1" cellpadding="5" style="width:100%; border-collapse:collapse;">
+                <tr><th>Район ID</th><th>Кол-во</th><th>Ущерб</th></tr>
                 @foreach (var d in Model.districtCountsMin)
                 {
                     <tr><td>@d.DistrictId</td><td>@d.IncidentCount</td><td>@d.TotalDamage</td></tr>
@@ -79,11 +105,11 @@
             </table>
         }
 
-        @if (Model.districtcount_date_and_min != null)
+        @if (Model.districtcount_date_and_min?.Any() == true)
         {
-            <h3>Инциденты по районам (диапазон + порог)</h3>
-            <table border="1">
-                <tr><th>Район</th><th>Количество</th><th>Сумма ущерба</th></tr>
+            <h3>Инциденты (диапазон + мин. ущерб)</h3>
+            <table border="1" cellpadding="5" style="width:100%; border-collapse:collapse;">
+                <tr><th>Район ID</th><th>Кол-во</th><th>Ущерб</th></tr>
                 @foreach (var d in Model.districtcount_date_and_min)
                 {
                     <tr><td>@d.DistrictId</td><td>@d.IncidentCount</td><td>@d.TotalDamage</td></tr>
@@ -91,11 +117,11 @@
             </table>
         }
 
-        @if (Model.district_count_subject_agregate != null)
+        @if (Model.district_count_subject_agregate?.Any() == true)
         {
-            <h3>Агрегат по районам (сортировка по ущербу)</h3>
-            <table border="1">
-                <tr><th>Район</th><th>Количество</th><th>Сумма ущерба</th></tr>
+            <h3>Агрегат по районам (по ущербу ↓)</h3>
+            <table border="1" cellpadding="5" style="width:100%; border-collapse:collapse;">
+                <tr><th>Район ID</th><th>Кол-во</th><th>Ущерб</th></tr>
                 @foreach (var d in Model.district_count_subject_agregate)
                 {
                     <tr><td>@d.DistrictId</td><td>@d.IncidentCount</td><td>@d.TotalDamage</td></tr>
@@ -103,10 +129,10 @@
             </table>
         }
 
-        @if (Model.agregate_with_subquery != null)
+        @if (Model.agregate_with_subquery?.Any() == true)
         {
             <h3>Инциденты с ущербом выше среднего</h3>
-            <table border="1">
+            <table border="1" cellpadding="5" style="width:100%; border-collapse:collapse;">
                 <tr><th>Класс</th><th>Дата</th><th>Описание</th><th>Стоимость ремонта</th></tr>
                 @foreach (var i in Model.agregate_with_subquery)
                 {
@@ -119,5 +145,60 @@
                 }
             </table>
         }
+
+        @if (Model.range_view_incidents?.Any() == true)
+        {
+            <h3>Инциденты за период (View)</h3>
+            <table border="1" cellpadding="5" style="width:100%; border-collapse:collapse;">
+                <tr>
+                    <th>ID</th>
+                    <th>Дата</th>
+                    <th>Описание</th>
+                    <th>Ущерб</th>
+                    <th>Марка</th>
+                    <th>VIN</th>
+                </tr>
+                @foreach (var v in Model.range_view_incidents)
+                {
+                    <tr>
+                        <td>@v.incident_id</td>
+                        <td>@v.incident_date</td>
+                        <td>@v.description</td>
+                        <td>@v.repair_cost</td>
+                        <td>@v.car_brand</td>
+                        <td>@v.vin</td>
+                    </tr>
+                }
+            </table>
+        }
+
+        @if (Model.join_prava?.Any() == true)
+        {
+            <h3>Результат по транспортному средству (права + владелец)</h3>
+            <table border="1" cellpadding="5" style="width:100%; border-collapse:collapse;">
+                <tr>
+                    <th>Серия/Номер прав</th>
+                    <th>Категории</th>
+                    <th>Владелец</th>
+                    <th>Паспорт</th>
+                    <th>Марка</th>
+                    <th>Цвет</th>
+                    <th>VIN</th>
+                </tr>
+                @foreach (var j in Model.join_prava)
+                {
+                    <tr>
+                        <td>@j.prava.series @j.prava.number</td>
+                        <td>@string.Join(", ", j.prava.type)</td>
+                        <td>@j.Person.LastName @j.Person.FirstName</td>
+                        <td>@j.Person.PassportSeries @j.Person.PassportNumber</td>
+                        <td>@j.Vehicle.CarBrand</td>
+                        <td>@j.Vehicle.Color</td>
+                        <td>@j.Vehicle.Vin</td>
+                    </tr>
+                }
+            </table>
+        }
+
     </div>
 </div>
