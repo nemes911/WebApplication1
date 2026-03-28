@@ -1,4 +1,90 @@
 ﻿@page
 @model WebApplication1.Pages.VehicleAndOwnersModel
-@{
+
+<h1>Vehicle / Owners / Licenses</h1>
+
+<hr />
+
+<!-- ===================== VIEW: vehicle_owner_license ===================== -->
+<h2>Full View (Vehicle + Owner + License)</h2>
+
+@if (Model.view_Onwer_Cars != null)
+{
+    <table border="1">
+        <tr>
+            <th>Vehicle</th>
+            <th>Brand</th>
+            <th>Owner</th>
+            <th>Passport</th>
+            <th>License Series</th>
+            <th>License Number</th>
+            <th>Type</th>
+            <th>Active</th>
+            <th>Days Left</th>
+        </tr>
+
+        @foreach (var v in Model.view_Onwer_Cars)
+        {
+            <tr>
+                <td>@v.Serial_number</td>
+                <td>@v.car_brand</td>
+                <td>@v.owner_full_name</td>
+                <td>@v.passport_series / @v.passport_number</td>
+                <td>@(v.license_series ?? "-")</td>
+                <td>@(v.license_number?.ToString() ?? "-")</td>
+                <td>@(v.license_type ?? "-")</td>
+                <td>@(v.license_active ?? "-")</td>
+                <td>@(v.license_days_left?.ToString() ?? "-")</td>
+            </tr>
+        }
+    </table>
+}
+
+<hr />
+
+<!-- ===================== PEOPLE + PRAVAS ===================== -->
+<h2>People + Prava</h2>
+
+<form method="post">
+    <button type="submit">Load People + Prava</button>
+</form>
+
+@if (Model.perssones != null)
+{
+    <table border="1">
+        <tr>
+            <th>Name</th>
+            <th>Passport</th>
+        </tr>
+
+        @foreach (var p in Model.perssones)
+        {
+            <tr>
+                <td>@p.FirstName @p.LastName</td>
+                <td>@p.PassportSeries / @p.PassportNumber</td>
+            </tr>
+        }
+    </table>
+}
+
+@if (Model.pravas != null)
+{
+    <h3>Prava</h3>
+
+    <table border="1">
+        <tr>
+            <th>Series</th>
+            <th>Number</th>
+            <th>Type</th>
+        </tr>
+
+        @foreach (var pr in Model.pravas)
+        {
+            <tr>
+                <td>@pr.series</td>
+                <td>@pr.number</td>
+                <td>@(pr.type != null ? string.Join(",", pr.type) : "-")</td>
+            </tr>
+        }
+    </table>
 }

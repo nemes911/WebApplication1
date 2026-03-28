@@ -1,1 +1,52 @@
-﻿
+﻿@page
+@model WebApplication1.Pages.PravaModel
+
+<h2>Поиск прав по категории</h2>
+
+<form method="post" asp-page-handler="PravaLikeCategory">
+    <label>Категория (type):</label>
+    <input type="text" name="Category" />
+
+    <button type="submit">Найти</button>
+</form>
+
+<hr />
+
+@if (Model.pravas != null && Model.pravas.Count > 0)
+{
+    <h3>Результаты:</h3>
+
+    <table border="1" cellpadding="5">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Дата</th>
+                <th>Серия</th>
+                <th>Номер</th>
+                <th>Окончание</th>
+                <th>Код</th>
+                <th>Тип</th>
+                <th>Статус</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.pravas)
+            {
+                <tr>
+                    <td>@item.id</td>
+                    <td>@item.date</td>
+                    <td>@item.series</td>
+                    <td>@item.number</td>
+                    <td>@item.date_end</td>
+                    <td>@item.kod_podrazdeleniya</td>
+                    <td>@string.Join(",", item.type ?? new string[] { })</td>
+                    <td>@item.status</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else if (Model.pravas != null)
+{
+    <p>Ничего не найдено</p>
+}

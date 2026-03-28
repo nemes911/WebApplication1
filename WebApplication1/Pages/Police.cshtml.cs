@@ -29,8 +29,11 @@ namespace WebApplication1.Pages
             var name = Request.Cookies["username"];
             var password = Request.Cookies["password"];
             var constring = $"Host=localhost;Database=postgres;Username={name};Password={password}";
+            var list = new List<DistrictAndPoliceStation>();
+            var dep = new PoliceDepartment();
             using (var conn = new NpgsqlConnection(constring))
             {
+                conn.Open();
                 var cmd = new NpgsqlCommand(@"SELECT 
     d.id AS district_id,
     d.""name"" AS district_name,
@@ -41,23 +44,26 @@ FROM gai.district d
 INNER JOIN gai.police_station ps 
     ON d.id = ps.district_id;", conn);
 
+                
                 using (var reader = cmd.ExecuteReader())
                 {
                     while (reader.Read())
                     {
-                        districtAndPoliceStations.Add(new DistrictAndPoliceStation
+                        
+                        list.Add(new DistrictAndPoliceStation
                         {
-                            Id = reader.GetInt32(0),
-                            Name = reader.GetString(1),
-                            idPolice = reader.GetInt32(2),
-                            idstrict = reader.GetInt32(3),
-                            address = reader.GetString(4),
-                            phone = reader.GetString(5)
-                        }
-                        );
+                            Id = reader.GetInt32(0),          // district_id
+                            Name = reader.GetString(1),       // district_name
+                            idPolice = reader.GetInt32(2),    // police_station_id
+                            idstrict = reader.GetInt32(0),    // если ты хотел хранить district_id ещё раз
+                            address = reader.GetString(3),    // ps.address
+                            phone = reader.GetString(4)       // ps.phone
+                        });
+
                     }
                 }
             }
+            districtAndPoliceStations = list;
             using (var conn = new NpgsqlConnection(constring))
             {
                 conn.Open();
@@ -81,20 +87,21 @@ INNER JOIN gai.police_station ps
                     if (reader.Read())   
                     {
                         
-                        department.District ??= new District();
+                        dep.District ??= new District();
 
-                        department.Id = reader.GetInt32(0);   
-                        department.DistrictId = reader.GetInt32(1);
-                        department.ChiefFirstName = reader.GetString(3);
-                        department.ChiefLastName = reader.GetString(4);
-                        department.ChiefMiddleName = reader.IsDBNull(5) ? null : reader.GetString(5);
-                        department.Address = reader.GetString(6);
+                        dep.Id = reader.GetInt32(0);   
+                        dep.DistrictId = reader.GetInt32(1);
+                        dep.ChiefFirstName = reader.GetString(3);
+                        dep.ChiefLastName = reader.GetString(4);
+                        dep.ChiefMiddleName = reader.IsDBNull(5) ? null : reader.GetString(5);
+                        dep.Address = reader.GetString(6);
 
-                        department.District.Id = reader.GetInt32(1);   
-                        department.District.Name = reader.GetString(2);  
+                        dep.District.Id = reader.GetInt32(1);   
+                        dep.District.Name = reader.GetString(2);  
                     }
                 }
             }
+            department = dep;
         }
 
 

@@ -49,53 +49,31 @@
     public class view_onwer_car
     {
         public Guid Vehicle_id { get; set; }
-
         public int Serial_number { get; set; }
-
         public string color { get; set; }
-
         public string car_brand { get; set; }
-
-        public string insurance_company { get; set; }
-
+        public string? insurance_company { get; set; }
         public string vin { get; set; }
-
         public Guid owner_id { get; set; }
-
         public string first_name { get; set; }
-
         public string last_name { get; set; }
-
-        public string middle_name { get; set; }
-
+        public string? middle_name { get; set; }
         public int passport_series { get; set; }
-
         public int passport_number { get; set; }
-
         public int social_status_id { get; set; }
 
-        public Guid license_id { get; set; }
-
-        public DateTime license_issue_date { get; set;}
-
-        public string license_series { get; set; }
-
-        public int license_number { get; set; }
-
-        public DateTime license_expiry_date { get; set; }
-
-        public string  kod_podrazdeleniya { get; set; }
-
-        public string[] license_type { get; set; }
-
-        public bool license_active { get; set; }
-
+        public Guid? license_id { get; set; }
+        public DateTime? license_issue_date { get; set; }
+        public string? license_series { get; set; }
+        public int? license_number { get; set; }
+        public DateTime? license_expiry_date { get; set; }
+        public string? kod_podrazdeleniya { get; set; }
+        public string? license_type { get; set; }   // теперь строка
+        public string? license_active { get; set; } // теперь строка ("active"/"inactive")
         public string owner_full_name { get; set; }
+        public int? license_days_left { get; set; }
 
-        public int license_days_left { get; set; }
-
-
-        public view_onwer_car(Guid vehicle_id, int serial_number, string color, string car_brand, string insurance_company, string vin, Guid owner_id, string first_name, string last_name, string middle_name, int passport_series, int passport_number, int social_status_id, Guid license_id, DateTime license_issue_date, string license_series, int license_number, DateTime license_expiry_date, string kod_podrazdeleniya, string[] license_type, bool license_active, string owner_full_name, int license_days_left)
+        public view_onwer_car(Guid vehicle_id, int serial_number, string color, string car_brand, string? insurance_company, string vin, Guid owner_id, string first_name, string last_name, string? middle_name, int passport_series, int passport_number, int social_status_id, Guid? license_id, DateTime? license_issue_date, string? license_series, int? license_number, DateTime? license_expiry_date, string? kod_podrazdeleniya, string? license_type, string? license_active, string owner_full_name, int? license_days_left)
         {
             Vehicle_id = vehicle_id;
             Serial_number = serial_number;
@@ -121,6 +99,8 @@
             this.owner_full_name = owner_full_name;
             this.license_days_left = license_days_left;
         }
+
         public view_onwer_car() { }
     }
+
 }

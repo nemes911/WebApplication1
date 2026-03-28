@@ -1,4 +1,196 @@
 ﻿@page
 @model WebApplication1.Pages.PoliceModel
-@{
+
+<h1>Police Page</h1>
+
+<hr />
+
+<!-- ===================== ДИСТРИКТ + ПОЛИЦИЯ ===================== -->
+<h2>District + Police Stations</h2>
+
+@if (Model.districtAndPoliceStations != null)
+{
+    <table border="1">
+        <tr>
+            <th>District</th>
+            <th>Police ID</th>
+            <th>Address</th>
+            <th>Phone</th>
+        </tr>
+
+        @foreach (var item in Model.districtAndPoliceStations)
+        {
+            <tr>
+                <td>@item.Name</td>
+                <td>@item.idPolice</td>
+                <td>@item.address</td>
+                <td>@item.phone</td>
+            </tr>
+        }
+    </table>
+}
+
+<hr />
+
+<!-- ===================== POLICE DEPARTMENT ===================== -->
+<h2>Police Department</h2>
+
+@if (Model.department != null)
+{
+    <p>
+        <b>@Model.department.ChiefFirstName @Model.department.ChiefLastName</b><br />
+        Address: @Model.department.Address<br />
+        District: @Model.department.District?.Name
+    </p>
+}
+
+<hr />
+
+<!-- ===================== OFFICERS RIGHT JOIN ===================== -->
+<h2>Officers (RIGHT JOIN)</h2>
+
+<form method="post" asp-page-handler="GetRightJoinOfficersWithIncidents">
+    <button type="submit">Load Officers</button>
+</form>
+
+@if (Model.oficers != null)
+{
+    <table border="1">
+        <tr>
+            <th>Name</th>
+            <th>Rank</th>
+            <th>Birth</th>
+        </tr>
+
+        @foreach (var o in Model.oficers)
+        {
+            <tr>
+                <td>@o.FirstName @o.LastName</td>
+                <td>@o.RankId</td>
+                <td>@o.BirthDate</td>
+            </tr>
+        }
+    </table>
+}
+
+<hr />
+
+<!-- ===================== LEFT JOIN INCIDENTS ===================== -->
+<h2>Left Join Incidents</h2>
+
+<form method="post" asp-page-handler="JoinjoinLeft">
+    <button type="submit">Load Incidents</button>
+</form>
+
+@if (Model.incidentOfficerDtos != null)
+{
+    <table border="1">
+        <tr>
+            <th>Incident</th>
+            <th>Date</th>
+            <th>Officer</th>
+            <th>Rank</th>
+        </tr>
+
+        @foreach (var i in Model.incidentOfficerDtos)
+        {
+            <tr>
+                <td>@i.IncidentId</td>
+                <td>@i.IncidentDate</td>
+                <td>@i.OfficerName</td>
+                <td>@i.RankName</td>
+            </tr>
+        }
+    </table>
+}
+
+<hr />
+
+<!-- ===================== INCIDENT OFFICER ===================== -->
+<h2>Incident Officer</h2>
+
+<form method="post" asp-page-handler="IncidentOfficer">
+    <button type="submit">Load</button>
+</form>
+
+@if (Model.incidentOfficerDtos != null)
+{
+    <table border="1">
+        <tr>
+            <th>Incident</th>
+            <th>Date</th>
+            <th>Officer</th>
+            <th>Rank</th>
+        </tr>
+
+        @foreach (var i in Model.incidentOfficerDtos)
+        {
+            <tr>
+                <td>@i.IncidentId</td>
+                <td>@i.IncidentDate</td>
+                <td>@i.OfficerName</td>
+                <td>@i.RankName</td>
+            </tr>
+        }
+    </table>
+}
+
+<hr />
+
+<!-- ===================== PRAVAS ===================== -->
+<h2>Prava + Owner</h2>
+
+<form method="post" asp-page-handler="Pravas">
+    <button type="submit">Load Pravas</button>
+</form>
+
+@if (Model.pravaAndOwnercs != null)
+{
+    <table border="1">
+        <tr>
+            <th>Series</th>
+            <th>Number</th>
+            <th>Person</th>
+            <th>Car</th>
+        </tr>
+
+        @foreach (var p in Model.pravaAndOwnercs)
+        {
+            <tr>
+                <td>@p.series</td>
+                <td>@p.number</td>
+                <td>@p.person?.FirstName @p.person?.LastName</td>
+                <td>@p.person?.PassportNumber</td>
+            </tr>
+        }
+    </table>
+}
+
+<hr />
+
+<!-- ===================== DEFAULT ONPOST ===================== -->
+<h2>People + Prava</h2>
+
+<form method="post">
+    <button type="submit">Load People</button>
+</form>
+
+@if (Model.pravaAndOwnercs != null)
+{
+    <table border="1">
+        <tr>
+            <th>Person</th>
+            <th>Prava Series</th>
+            <th>Number</th>
+        </tr>
+
+        @foreach (var p in Model.pravaAndOwnercs)
+        {
+            <tr>
+                <td>@p.person?.FirstName @p.person?.LastName</td>
+                <td>@p.series</td>
+                <td>@p.number</td>
+            </tr>
+        }
+    </table>
 }

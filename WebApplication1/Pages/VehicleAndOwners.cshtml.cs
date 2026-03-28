@@ -33,6 +33,7 @@ namespace WebApplication1.Pages
             string password = Request.Cookies["password"];
 
             var constring = $"Host=localhost;Database=postgres;Username={name};Password={password}";
+            var list = new List<view_onwer_car>();
 
             using (var conn = new NpgsqlConnection(constring))
             {
@@ -42,35 +43,40 @@ namespace WebApplication1.Pages
                 {
                     while (reader.Read())
                     {
-                        view_Onwer_Cars.Add(new view_onwer_car
+                        list.Add(new view_onwer_car
                         {
                             Vehicle_id = reader.GetGuid(0),
                             Serial_number = reader.GetInt32(1),
                             color = reader.GetString(2),
                             car_brand = reader.GetString(3),
-                            insurance_company = reader.GetString(4),
+                            insurance_company = reader.IsDBNull(4) ? null : reader.GetString(4),
                             vin = reader.GetString(5),
                             owner_id = reader.GetGuid(6),
                             first_name = reader.GetString(7),
                             last_name = reader.GetString(8),
-                            middle_name = reader.GetString(9),
+                            middle_name = reader.IsDBNull(9) ? null : reader.GetString(9),
                             passport_series = reader.GetInt32(10),
                             passport_number = reader.GetInt32(11),
                             social_status_id = reader.GetInt32(12),
-                            license_id = reader.GetGuid(13),
-                            license_issue_date = reader.GetDateTime(14),
-                            license_series = reader.GetString(15),
-                            license_number = reader.GetInt32(16),
-                            license_expiry_date = reader.GetDateTime(17),
-                            kod_podrazdeleniya = reader.GetString(18),
-                            license_type = reader.GetFieldValue<string[]>(19),
-                            license_active = reader.GetBoolean(20),
+
+                            license_id = reader.IsDBNull(13) ? null : reader.GetGuid(13),
+                            license_issue_date = reader.IsDBNull(14) ? (DateTime?)null : reader.GetDateTime(14),
+                            license_series = reader.IsDBNull(15) ? null : reader.GetString(15),
+                            license_number = reader.IsDBNull(16) ? (int?)null : reader.GetInt32(16),
+                            license_expiry_date = reader.IsDBNull(17) ? (DateTime?)null : reader.GetDateTime(17),
+                            kod_podrazdeleniya = reader.IsDBNull(18) ? null : reader.GetString(18),
+
+                            license_type = reader.IsDBNull(19) ? null : reader.GetString(19),   // теперь строка
+                            license_active = reader.IsDBNull(20) ? null : reader.GetString(20), // теперь строка ("active"/"inactive")
+
                             owner_full_name = reader.GetString(21),
-                            license_days_left = reader.GetInt32(22)
+                            license_days_left = reader.IsDBNull(22) ? (int?)null : reader.GetInt32(22)
                         });
+
                     }
                 }
             }
+            view_Onwer_Cars = list;
         }
         /// <summary>
         /// права и владельцы

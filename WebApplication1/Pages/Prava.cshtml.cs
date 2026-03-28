@@ -24,23 +24,18 @@ namespace WebApplication1.Pages
             {
                 conn.Open();
 
-                
+                // Используем оператор ANY для поиска элемента в массиве
                 var cmd = new NpgsqlCommand(@"
             SELECT *
             FROM gai.prava
-            WHERE ""type"" = @type
+            WHERE @type = ANY(""type"")
             ORDER BY ""date"" DESC;
         ", conn);
 
-               
                 string categoryInput = Request.Form["Category"].ToString().Trim();
 
-                
-                string[] typeArray = string.IsNullOrWhiteSpace(categoryInput)
-                    ? Array.Empty<string>()
-                    : new[] { categoryInput };
-
-                cmd.Parameters.AddWithValue("@type", typeArray);
+                // Передаём строку напрямую, а не массив
+                cmd.Parameters.AddWithValue("@type", categoryInput);
 
                 var pravaList = new List<Prava>();
 
@@ -50,24 +45,24 @@ namespace WebApplication1.Pages
                     {
                         var prava = new Prava
                         {
-                            id = reader.GetGuid("id"),
-                            date = reader.GetDateTime("date"),
-                            series = reader.GetString("series"),
-                            number = reader.GetInt32("number"),
-                            date_end = reader.GetDateTime("date_end"),
-                            kod_podrazdeleniya = reader.GetString("kod_podrazdeleniya"),
-                            type = reader.GetFieldValue<string[]>("type"),   
-                            status = reader.GetBoolean("status")
+                            id = reader.GetGuid(reader.GetOrdinal("id")),
+                            date = reader.GetDateTime(reader.GetOrdinal("date")),
+                            series = reader.GetString(reader.GetOrdinal("series")),
+                            number = reader.GetInt32(reader.GetOrdinal("number")),
+                            date_end = reader.GetDateTime(reader.GetOrdinal("date_end")),
+                            kod_podrazdeleniya = reader.GetString(reader.GetOrdinal("kod_podrazdeleniya")),
+                            type = reader.GetFieldValue<string[]>(reader.GetOrdinal("type")),
+                            status = reader.GetBoolean(reader.GetOrdinal("status"))
                         };
                         pravaList.Add(prava);
                     }
                 }
 
-                
                 pravas = pravaList;
             }
 
-            return Page();   
+            return Page();
         }
+
     }
 }
